@@ -5,9 +5,7 @@ from data import Data
 from pages.main_page import MainPage
 
 class TestAnswersQuestion:
-          
-   class TestAnswersQuestion:
-    @allure.title("Тест ответы вопросов")
+    @allure.title("Проверка текста ответов в разделе 'Вопросы о важном")
     @pytest.mark.parametrize('question, expected_text', Data.question_name)
     def test_question_names(self, driver, question, expected_text):
         # Arrange

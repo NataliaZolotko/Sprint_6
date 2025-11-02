@@ -25,9 +25,9 @@ class OrderPage(BasePage):
         self.send_keys_to_input(OrderLocators.ADDRESS_TO, address)
         
     @allure.step('Выбрать станцию метро: ')
-    def click_on_metro(self, station_name):
+    def click_on_metro(self,station_name):
         self.click_on_element(OrderLocators.STATION_METRO)
-        station_locator = (By.XPATH, f"//div[text()='{station_name}']")
+        station_locator = OrderLocators.get_station_locator(station_name)
         self.click_on_element(station_locator)
        
     @allure.step("Заполнить телефон")   
@@ -41,9 +41,7 @@ class OrderPage(BasePage):
     def fill_order_when(self):
         self.click_on_element(OrderLocators.WHEN)
         self.click_on_element(OrderLocators.DATA)
-    
-    
-    
+        
     @allure.step('Заполнить срок аренды ')
     def click_lease(self):
         self.click_on_element(OrderLocators.LEASE_TERM)
@@ -67,29 +65,26 @@ class OrderPage(BasePage):
         self.click_on_element(OrderLocators.LOGO_SCOOTER)
         assert OrderLocators.HOME_PAGE
     
-    @allure.step("Проверить что при клике на логотип Яндекса открывается главная страница Дзена в новом окне")
-    def click_on_yandex_logo_and_check_dzen(self):
-        main_window = self.driver.current_window_handle
-        original_windows = self.driver.window_handles
-    
+    @allure.step("Кликнуть на логотип Яндекса")
+    def click_on_yandex_logo(self):
         self.click_on_element(OrderLocators.LOGO_YANDEX)
-        
-    # Переключаемся на новое окно
-        for window_handle in self.driver.window_handles:
-            if window_handle not in original_windows:
-                 self.driver.switch_to.window(window_handle)
-                 break
+
+    @allure.step("Проверить что открылся Дзен")
+    def check_dzen_opened(self, original_windows):
+        new_window = self.wait_for_new_window(original_windows, 15)
+        if new_window:
+            self.switch_to_window(new_window)
+            self.wait_for_url_contains("dzen.ru", 15)
+            dzen_url = self.get_current_url()
+            return dzen_url, new_window
+        return None, None
     
+    @allure.step("Проверить, что главная страница Самоката загружена")
+    def is_main_page_loaded(self):
         try:
-        # Ждем загрузки страницы Дзена (может быть редирект)
-            WebDriverWait(self.driver, 15).until(
-                EC.url_contains("dzen.ru")
-            )
-        
-        # Проверяем что URL соответствует Дзену
-            current_url = self.driver.current_url
-            assert "dzen.ru" in current_url, f"Ожидался переход на dzen.ru, но получен URL: {current_url}"
-        finally:
-        # Закрываем окно с Дзеном и возвращаемся в исходное окно
-            self.driver.close()
-            self.driver.switch_to.window(main_window)
+            self.wait_for_element(OrderLocators.HOME_PAGE, timeout=5)
+            return "scooter" in self.get_current_url().lower()
+        except:
+            return False
+    
+  

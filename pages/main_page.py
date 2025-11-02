@@ -14,8 +14,7 @@ class MainPage(BasePage):
     @allure.step('Соглашаемся с принятием кук')
     def _assert_cookies(self):
         try:
-            assert_cookie_btn = (By.ID, f"rcc-confirm-button")
-            self.click_on_element(assert_cookie_btn)
+            self.click_on_element(MainPageLocators.ASSERT_COOKIE_BTN)
         except:
             pass
     
@@ -36,6 +35,8 @@ class MainPage(BasePage):
         answer_locator = MainPageLocators.answer_number(question)
         actual_text = self.get_text_on_element(answer_locator)
         return actual_text == expected_text
+    
+   
     
 
 

@@ -5,7 +5,7 @@ class MainPageLocators:
     QUESTIONS = (By.XPATH, ".//div[@class='accordion__item']")
     QUESTIONS_BUTTON = (By.XPATH, ".//div[@class='accordion__button']")
     ANSWERS = (By.XPATH, "//div[@class='accordion__panel']")
-
+    ASSERT_COOKIE_BTN = (By.ID, f"rcc-confirm-button")
 
     @staticmethod
     def question_button_number(question):

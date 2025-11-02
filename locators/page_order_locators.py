@@ -17,6 +17,10 @@ class OrderLocators:
     PLACE_AN_ORDER = (By.XPATH, ".//div[@class='Order_Buttons__1xGrp']/button[text()='Да']")
     ORDER_WINDOWS = (By.XPATH, ".//div[text()='Заказ оформлен']")
     
+    @staticmethod
+    def get_station_locator(station_name):
+        return (By.XPATH, f"//div[text()='{station_name}']")
+    
     VIEW_STATUS = (By.XPATH, "//button[text()='Посмотреть статус']")
     LOGO_SCOOTER = (By.XPATH, "//a[@class='Header_LogoScooter__3lsAR']")
     HOME_PAGE = (By.XPATH, "//div[@class='Home_HomePage__ZXKIX']")
